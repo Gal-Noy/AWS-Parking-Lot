@@ -5,6 +5,10 @@ import uuid
 
 app = FastAPI()
 
+@app.get("/")
+def health_check():
+    return {"status": "ok"}
+
 @app.post("/entry")
 def entry(plate: str = Query(...), parkingLot: str = Query(...)):
     ticket_id = str(uuid.uuid4())

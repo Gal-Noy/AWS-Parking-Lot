@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from boto3.dynamodb.conditions import Attr
 import datetime
 
-dynamodb = boto3.resource("dynamodb", region_name=os.getenv("AWS_REGION"))
+dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
 table = dynamodb.Table("ParkingTickets")
 print(f'Successfully connected to DynamoDB table: {table.name}')
 
