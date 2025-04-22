@@ -2,13 +2,6 @@
 
 This is a simple cloud-based parking lot management system built using FastAPI. It runs on an EC2 instance and uses AWS DynamoDB for data storage.
 
-## Features
-
-- Create and remove parking entries
-- Prevent duplicate entries for the same car
-- Calculate parking fees based on time parked
-- Store all ticket data in DynamoDB
-
 ## Technologies Used
 
 - Python 3
