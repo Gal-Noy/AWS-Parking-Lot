@@ -1,93 +1,78 @@
-# Parking Lot Management System (FastAPI + AWS)
+## Parking Lot Management System (FastAPI + AWS)
 
-This is a simple cloud-based parking lot management system built using FastAPI. It runs on an EC2 instance and uses AWS DynamoDB for data storage.
+A serverless-ready parking lot system using FastAPI on an AWS EC2 instance with DynamoDB. Infrastructure is deployed via `Terraform` and managed with a simple `deploy.sh` script.
 
-## Technologies Used
+## Stack
 
+- FastAPI + Uvicorn
 - Python 3
-- FastAPI
-- AWS EC2
-- AWS DynamoDB
-- Uvicorn
+- AWS EC2 & DynamoDB
+- Terraform
 - Boto3
 
-## Endpoints
+## API Endpoints
 
 ### `GET /`
-Health check endpoint  
-**Example**:  
+Health check  
 ```bash
-curl http://3.92.223.19:8000/
+curl http://<public-ip>:8000/
 ```
 
 ### `POST /entry`
-Registers a new car entry into the parking lot  
-**Required query parameters**: `plate`, `parkingLot`  
-**Example**:  
+Register car entry  
 ```bash
-curl -X POST "http://3.92.223.19:8000/entry?plate=123-456-789&parkingLot=385"
-```
-
-**Response**:  
-```json
-{
-  "ticketId": "<uuid>"
-}
+curl -X POST "http://<public-ip>:8000/entry?plate=123-456-789&parkingLot=385"
 ```
 
 ### `POST /exit`
-Closes a parking ticket and returns the total time and fee  
-**Required query parameter**: `ticketId`  
-**Example**:  
+Close ticket  
 ```bash
-curl -X POST "http://3.92.223.19:8000/exit?ticketId=<ticket-id>"
+curl -X POST "http://<public-ip>:8000/exit?ticketId=<ticket-id>"
 ```
 
-**Response**:  
-```json
-{
-  "plate": "123-456-789",
-  "parkingLot": "385",
-  "totalTimeMinutes": 42,
-  "charge": 7.0
-}
+## Deployment
+
+### Prerequisites
+
+- [Terraform](https://developer.hashicorp.com/terraform/downloads)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+- `curl`
+
+Configure AWS credentials:
+```bash
+aws configure
 ```
 
-## Deployment Process
+### Steps
 
-1. **EC2 Instance Setup**  
-   Launched an EC2 instance running Amazon Linux 2. Inbound traffic on port **8000** was enabled in the security group to allow external access to the FastAPI application.
+```bash
+git clone https://github.com/Gal-Noy/AWS-Parking-Lot
+cd AWS-Parking-Lot
+./deploy.sh
+```
 
-2. **IAM Role Configuration**  
-   Attached an IAM role to the EC2 instance with permissions to access **AWS DynamoDB**, used for storing parking ticket data.
+The script will deploy the infra, wait for the app to respond, and print access info.
 
-3. **DynamoDB Table Creation**  
-   Created a DynamoDB table named `ParkingTickets` with the following configuration:
-   - Primary key: `ticketId` (String)
+## Architecture
 
-4. **Application Deployment**  
-   Used the `user_data.sh` script to automate the setup of the application environment. The script performs the following actions:
-   - Updates system packages
-   - Installs Python and Git
-   - Clones the project repository
-   - Installs required Python dependencies
-   - Starts the FastAPI application using `uvicorn` on port 8000
+- EC2 instance with IAM role
+- DynamoDB table (`ticketId` as primary key)
+- SSH + HTTP allowed via Security Group
+- TLS key pair saved to `deployment/parking-lot-key.pem`
+- App auto-starts with `user_data.sh`
 
-   Deployment script:
-   ```bash
-   ./user_data.sh
-   ```
+## Access
 
-5. **Accessing the Application**  
-   After deployment, the application was accessible at:
-   ```
-   http://3.92.223.19:8000
-   ```
+API:
+```bash
+curl http://<public-ip>:8000/
+```
 
-   API endpoints were tested using:
-   - `curl` in **Git Bash**
-   - **Postman**
+SSH:
+```bash
+ssh -i deployment/parking-lot-key.pem ec2-user@<public-ip>
+```
 
-## Authors
+## Author
 
-Gal Noy – Cloud Computing Assignment
+Gal Noy – Cloud Computing Assignment, Reichman University
