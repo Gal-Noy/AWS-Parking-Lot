@@ -1,2 +1,18 @@
-venv
-*.pem
+# Terraform state
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+
+# SSH private key
+parking-lot-key.pem
+
+# Local logs or output files
+*.log
+
+# OS/Editor clutter
+.DS_Store
+*.swp
+*.swo
+*.tmp
