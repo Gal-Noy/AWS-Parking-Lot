@@ -45,9 +45,17 @@ aws configure
 
 ### Steps
 
+Clone the repo:
+
 ```bash
 git clone https://github.com/Gal-Noy/AWS-Parking-Lot
 cd AWS-Parking-Lot
+```
+
+Make the deploy script executable and run it:
+
+```bash
+chmod +x deploy.sh
 ./deploy.sh
 ```
 
